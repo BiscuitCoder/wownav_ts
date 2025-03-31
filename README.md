@@ -37,6 +37,69 @@ npm run build
 npm start
 ```
 
+## Docker 部署
+
+### 快速部署
+
+1. 给启动脚本添加执行权限：
+```bash
+chmod +x start.sh
+```
+
+2. 运行启动脚本（必需提供 SITE_PASSWORD_SALT）：
+```bash
+# 基本用法
+./start.sh -s your_random_salt_string
+
+# 自定义端口和主机地址
+./start.sh -s your_random_salt_string -p 8080 -h http://your-domain.com
+```
+
+启动脚本参数说明：
+- `-s <SITE_PASSWORD_SALT>`: 站点密码加密盐值（必需）
+- `-p <PORT>`: 端口号（可选，默认：3008）
+- `-h <HOST>`: 主机地址（可选，默认：http://localhost:3008）
+
+启动脚本会自动：
+- 检查 Docker 是否安装
+- 创建必要的数据目录
+- 构建 Docker 镜像
+- 启动容器
+- 配置数据持久化
+- 设置环境变量
+
+### 手动部署
+
+1. 构建镜像：
+```bash
+docker build -t wownav .
+```
+
+2. 运行容器：
+```bash
+docker run -d \
+  -p 3008:3000 \
+  -v /path/to/your/public:/app/public \
+  -e PORT=3000 \
+  -e NODE_ENV=production \
+  -e HOST=http://your-domain.com \
+  -e SITE_PASSWORD_SALT=your_random_salt_string \
+  --name wownav \
+  wownav
+```
+
+### Docker 部署说明
+
+- `-p 3008:3000`: 将容器的 3000 端口映射到主机的 3008 端口
+- `-v /path/to/your/public:/app/public`: 将站点数据目录挂载到宿主机
+- `-e`: 设置环境变量，可以根据需要修改
+
+### 数据持久化
+
+- 站点配置文件存储在容器的 `/app/public` 目录
+- 通过 volume 挂载实现数据持久化
+- 建议定期备份 `public` 目录
+
 ## 项目结构
 
 ```
