@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wownav 使用文档</title>
+    <style>
+         :root {
+            --theme-color: #102fb9;
+            --theme-rgb: 16, 47, 185;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --hover-bg: #f5f7f9;
+            --text-color: #333;
+            --secondary-text: #6c757d;
+            --tertiary-text: #9ca3af;
+            --border-color: #eaecef;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .content-wrapper {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: var(--theme-color);
+            margin-bottom: 30px;
+            font-size: 2em;
+        }
+        
+        h2 {
+            color: var(--text-color);
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        h3 {
+            color: var(--text-color);
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+        
+        .note {
+            background: rgba(var(--theme-rgb), 0.1);
+            border-left: 4px solid var(--theme-color);
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        
+        code {
+            background: var(--hover-bg);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: var(--hover-bg);
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+        
+        pre code {
+            background: none;
+            padding: 0;
+        }
+        
+        ul,
+        ol {
+            margin-bottom: 15px;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .step {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            display: inline-block;
+            background: var(--theme-color);
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .json-example {
+            background: var(--hover-bg);
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+        
+        .json-example pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 12px;
+            }
+            .content-wrapper {
+                padding: 16px;
+            }
+            h1 {
+                font-size: 1.6em;
+                margin-bottom: 20px;
+            }
+            h2 {
+                font-size: 1.3em;
+                margin-top: 24px;
+                margin-bottom: 12px;
+            }
+            h3 {
+                font-size: 1.1em;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            p {
+                font-size: 0.9em;
+                margin-bottom: 10px;
+            }
+            .note,
+            .warning {
+                padding: 10px;
+                margin: 12px 0;
+                font-size: 0.9em;
+            }
+            code {
+                font-size: 0.8em;
+                padding: 1px 4px;
+            }
+            pre {
+                padding: 10px;
+                margin: 12px 0;
+                font-size: 0.8em;
+            }
+            .step {
+                padding: 10px;
+                margin-bottom: 10px;
+            }
+            .step-number {
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                margin-right: 8px;
+                font-size: 0.9em;
+            }
+            .json-example {
+                padding: 10px;
+                margin: 12px 0;
+            }
+            ul,
+            ol {
+                padding-left: 16px;
+                margin-bottom: 10px;
+            }
+            li {
+                margin-bottom: 6px;
+                font-size: 0.9em;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 8px;
+            }
+            .content-wrapper {
+                padding: 12px;
+            }
+            h1 {
+                font-size: 1.4em;
+                margin-bottom: 16px;
+            }
+            h2 {
+                font-size: 1.2em;
+                margin-top: 20px;
+                margin-bottom: 10px;
+            }
+            h3 {
+                font-size: 1em;
+                margin-top: 16px;
+                margin-bottom: 8px;
+            }
+            p {
+                font-size: 0.85em;
+                margin-bottom: 8px;
+            }
+            .note,
+            .warning {
+                padding: 8px;
+                margin: 10px 0;
+                font-size: 0.85em;
+            }
+            code {
+                font-size: 0.75em;
+                padding: 1px 3px;
+            }
+            pre {
+                padding: 8px;
+                margin: 10px 0;
+                font-size: 0.75em;
+            }
+            .step {
+                padding: 8px;
+                margin-bottom: 8px;
+            }
+            .step-number {
+                width: 18px;
+                height: 18px;
+                line-height: 18px;
+                margin-right: 6px;
+                font-size: 0.8em;
+            }
+            .json-example {
+                padding: 8px;
+                margin: 10px 0;
+            }
+            ul,
+            ol {
+                padding-left: 12px;
+                margin-bottom: 8px;
+            }
+            li {
+                margin-bottom: 4px;
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="content-wrapper">
+            <h1>Wownav 使用文档</h1>
+
+            <h2>快速开始</h2>
+            <p>Wownav 是一个免费的导航网站生成工具，帮助您快速创建个性化的导航站点。本指南将帮助您了解如何使用 Wownav 的各项功能。</p>
+
+            <h2>创建站点</h2>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>访问创建页面</strong>
+                <p>点击导航栏中的"✨ 创建站点"按钮，进入站点创建页面。</p>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>填写站点信息</strong>
+                <p>输入站点名称、标题、描述等基本信息。站点名称将作为您的站点 URL 的一部分。</p>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>设置密码</strong>
+                <p>创建站点时需要设置一个安全的密码，密码要求：</p>
+                <ul>
+                    <li>至少 6 位字符</li>
+                    <li>必须包含大写字母</li>
+                    <li>必须包含小写字母</li>
+                    <li>必须包含数字</li>
+                </ul>
+                <div class="warning">
+                    请妥善保管您的密码，密码丢失将无法管理站点。
+                </div>
+            </div>
+
+            <h2>管理站点</h2>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>访问管理页面</strong>
+                <p>点击导航栏中的"⚙️ 管理站点"按钮，进入导航管理页面。</p>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>验证站点</strong>
+                <p>输入您的站点名称，系统将验证站点是否存在。</p>
+            </div>
+
+            <div class="step">
+                <span class="step-number">3</span>
+                <strong>输入密码</strong>
+                <p>输入创建站点时设置的密码，验证身份。</p>
+            </div>
+
+            <h2>导入导航</h2>
+            <h3>JSON 导入</h3>
+            <p>您可以通过 JSON 文件导入导航数据，JSON 格式如下：</p>
+            <div class="json-example">
+                <pre><code>[{
+                    "category": "分类名称222",
+                    "sort": 3,
+                    "navs": [{
+                        "name": "导航站名称1",
+                        "url": "https://www.wownav.com",
+                        "sort": 3
+                    }, {
+                        "name": "导航站名称2",
+                        "url": "https://www.wownav.com",
+                        "sort": 2
+                    }, {
+                        "name": "导航站名称3",
+                        "url": "https://www.wownav.com",
+                        "sort": 1
+                    }]
+                },
+                {
+                    "category": "分类名称",
+                    "sort": 1,
+                    "navs": [{
+                        "name": "导航站名称1",
+                        "url": "https://www.wownav.com",
+                        "sort": 3
+                    }, {
+                        "name": "导航站名称2",
+                        "url": "https://www.wownav.com",
+                        "sort": 2
+                    }, {
+                        "name": "导航站名称3",
+                        "url": "https://www.wownav.com",
+                        "sort": 1
+                    }]
+                }
+            ]</code></pre>
+            </div>
+
+            <h3>浏览器书签导入</h3>
+            <div class="step">
+                <span class="step-number">1</span>
+                <strong>导出书签</strong>
+                <p>在浏览器中导出书签文件（HTML 格式）：</p>
+                <ul>
+                    <li>Chrome/Edge：点击右上角菜单 → 书签 → 书签管理器 → 更多 → 导出书签</li>
+                    <li>Firefox：点击右上角菜单 → 书签 → 显示所有书签 → 导入和备份 → 导出书签到 HTML</li>
+                </ul>
+            </div>
+
+            <div class="step">
+                <span class="step-number">2</span>
+                <strong>导入书签</strong>
+                <p>在管理页面中，选择"导入书签"功能，上传导出的书签文件。系统会自动解析书签并创建相应的导航分类。</p>
+            </div>
+
+            <h2>安全说明</h2>
+            <div class="note">
+                <p>Wownav 采用以下安全措施保护您的站点：</p>
+                <ul>
+                    <li>密码使用 bcrypt 加密存储</li>
+                    <li>所有操作都需要验证码验证</li>
+                    <li>站点配置数据使用 JSON 格式安全存储</li>
+                </ul>
+            </div>
+
+            <h2>常见问题</h2>
+            <h3>忘记密码怎么办？</h3>
+            <p>如果您忘记了密码，且没有设置密码提示，将无法恢复对站点的管理权限。建议您：</p>
+            <ul>
+                <li>创建新站点</li>
+                <li>重新导入导航数据</li>
+                <li>妥善保管新密码</li>
+            </ul>
+
+            <h3>如何修改站点信息？</h3>
+            <p>在管理页面中，您可以修改：</p>
+            <ul>
+                <li>站点标题</li>
+                <li>站点描述</li>
+                <li>主题颜色</li>
+                <li>导航分类和链接</li>
+                <li>密码（可选）</li>
+            </ul>
+
+            <h3>如何删除站点？</h3>
+            <p>在管理页面中，点击"删除站点"按钮，输入密码确认后即可删除站点。请注意，删除操作不可恢复。</p>
+        </div>
+    </div>
+
+</body>
+
+</html>

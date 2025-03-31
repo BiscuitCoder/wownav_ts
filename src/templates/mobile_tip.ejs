@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>请在 PC 端操作 - Wownav</title>
+    <style>
+         :root {
+            --theme-color: #102fb9;
+            --theme-rgb: 16, 47, 185;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #333;
+            --secondary-text: #6c757d;
+        }
+        
+        .container {
+            width: 400px;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: center;
+            margin: 100px auto;
+        }
+        
+        .icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        
+        h1 {
+            font-size: 1.4em;
+            color: var(--theme-color);
+            margin-bottom: 12px;
+        }
+        
+        p {
+            color: var(--secondary-text);
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            color: var(--theme-color);
+            text-decoration: none;
+            font-size: 0.9em;
+            padding: 8px 16px;
+            border-radius: 6px;
+            background: rgba(var(--theme-rgb), 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            background: rgba(var(--theme-rgb), 0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="icon">💻</div>
+        <h1>请在 PC 端操作</h1>
+        <p>为了提供更好的操作体验，
+            <%= title %>功能目前仅支持在 PC 端使用。请使用电脑访问本站。</p>
+        <a href="/" class="back-link">返回首页</a>
+    </div>
+</body>
+
+</html>

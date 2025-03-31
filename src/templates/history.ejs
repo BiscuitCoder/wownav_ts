@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>浏览记录 - Wownav</title>
+    <link rel="icon" href="<%= config.icon %>">
+    <style>
+         :root {
+            --theme-color: #102fb9;
+            --theme-rgb: 16, 47, 185;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --hover-bg: #f5f7f9;
+            --text-color: #333;
+            --secondary-text: #6c757d;
+            --tertiary-text: #9ca3af;
+            --border-color: #eaecef;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
+        
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            min-height: calc(100vh - 450px);
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-title {
+            font-size: 2em;
+            color: var(--text-color);
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+        
+        .page-description {
+            color: var(--secondary-text);
+            font-size: 1.1em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .history-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        .history-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            gap: 12px;
+        }
+        
+        .history-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-color: var(--theme-color);
+        }
+        
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            min-width: 0;
+        }
+        
+        .history-title {
+            font-size: 1em;
+            font-weight: 600;
+            color: var(--text-color);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1;
+            min-width: 0;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .history-title:hover {
+            color: var(--theme-color);
+        }
+        
+        .history-footer {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+        }
+        
+        .history-time {
+            color: var(--tertiary-text);
+            font-size: 0.75em;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .history-url {
+            color: var(--secondary-text);
+            font-size: 0.8em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            white-space: nowrap;
+            overflow: hidden;
+            min-width: 0;
+            flex: 1;
+            opacity: 0.7;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .history-url span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .history-url:hover {
+            opacity: 1;
+        }
+        
+        .history-icon {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: var(--theme-color);
+            background: linear-gradient(135deg, rgba(var(--theme-rgb), 0.1), rgba(var(--theme-rgb), 0.05));
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+        
+        .history-icon img {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        
+        .icon-placeholder {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: var(--hover-bg);
+            border-radius: 4px;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                opacity: 0.6;
+            }
+            50% {
+                opacity: 0.3;
+            }
+            100% {
+                opacity: 0.6;
+            }
+        }
+        
+        .lazy {
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .lazy.loaded {
+            opacity: 1;
+        }
+        
+        .no-history {
+            text-align: center;
+            padding: 48px 24px;
+            background: var(--card-bg);
+            border-radius: 12px;
+            color: var(--secondary-text);
+            font-size: 16px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .no-history-icon {
+            font-size: 48px;
+            color: var(--theme-color);
+            opacity: 0.5;
+            margin-bottom: 16px;
+        }
+        
+        .no-history-text {
+            margin-bottom: 16px;
+        }
+        
+        .delete-item {
+            position: static;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ff4d4f;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            opacity: 0;
+            flex-shrink: 0;
+        }
+        
+        .history-item:hover .delete-item {
+            opacity: 1;
+        }
+        
+        .delete-item:hover {
+            color: #ff7875;
+            background: rgba(255, 77, 79, 0.1);
+        }
+        
+        .clear-history {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--theme-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            opacity: 0.8;
+        }
+        
+        .clear-history:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(var(--theme-rgb), 0.2);
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .history-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .main-content {
+                padding: 12px;
+            }
+            .page-title {
+                font-size: 1.4em;
+                margin-bottom: 12px;
+                text-align: left;
+            }
+            .history-item {
+                padding: 20px;
+                gap: 8px;
+            }
+            .history-title {
+                font-size: 0.9em;
+            }
+            .history-url {
+                font-size: 0.75em;
+                gap: 6px;
+            }
+            .history-time {
+                font-size: 0.7em;
+            }
+            .history-icon {
+                width: 16px;
+                height: 16px;
+            }
+            .history-icon img {
+                width: 16px;
+                height: 16px;
+            }
+            .clear-history {
+                bottom: 12px;
+                right: 12px;
+                padding: 8px 16px;
+                font-size: 13px;
+                z-index: 100;
+            }
+            .delete-item {
+                width: 20px;
+                height: 20px;
+                font-size: 14px;
+            }
+            .search-input {
+                font-size: 14px;
+                padding: 8px 14px;
+                padding-left: 36px;
+                height: 40px;
+            }
+            .search-icon {
+                font-size: 16px;
+                left: 12px;
+            }
+            .search-container {
+                margin-bottom: 16px;
+            }
+            .no-history {
+                padding: 32px 16px;
+                text-align: left;
+            }
+            .no-history-icon {
+                font-size: 36px;
+                margin-bottom: 12px;
+            }
+            .no-history-text {
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .history-list {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 6px;
+            }
+            .main-content {
+                padding: 8px;
+            }
+            .history-item {
+                padding: 8px;
+            }
+            .history-title {
+                font-size: 0.85em;
+            }
+            .history-url {
+                font-size: 0.7em;
+            }
+            .history-time {
+                font-size: 0.65em;
+            }
+            .clear-history {
+                width: calc(100% - 24px);
+                justify-content: center;
+                bottom: 8px;
+                right: 12px;
+            }
+        }
+        
+        .search-container {
+            margin-bottom: 24px;
+            position: relative;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            padding-left: 48px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            color: var(--text-color);
+            background-color: var(--card-bg);
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--theme-color);
+            box-shadow: 0 0 0 3px rgba(var(--theme-rgb), 0.1);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--secondary-text);
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-content">
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-input" placeholder="搜索历史记录..." id="searchInput">
+        </div>
+        <div id="noHistory" style="display: none;">
+            <div class="no-history">
+                <div class="no-history-icon">📜</div>
+                <div class="no-history-text">暂无浏览记录</div>
+            </div>
+        </div>
+        <div class="history-list" id="historyList">
+            <!-- 历史记录将通过 JavaScript 动态加载 -->
+        </div>
+    </div>
+
+    <button class="clear-history" onclick="clearHistory()">
+        <span>🗑️</span>
+        <span>清空记录</span>
+    </button>
+
+
+    <script>
+        // 从 localStorage 获取历史记录
+        function getHistory() {
+            const history = localStorage.getItem('navHistory');
+            return history ? JSON.parse(history) : [];
+        }
+
+        // 删除单个记录
+        function deleteHistoryItem(url) {
+            const history = getHistory();
+            const newHistory = history.filter(item => item.url !== url);
+            localStorage.setItem('navHistory', JSON.stringify(newHistory));
+            displayHistory();
+        }
+
+        // 清空历史记录
+        function clearHistory() {
+            if (confirm('确定要清空所有浏览记录吗？此操作不可恢复。')) {
+                localStorage.removeItem('navHistory');
+                displayHistory();
+            }
+        }
+
+        // 格式化时间
+        function formatTime(timestamp) {
+            const now = new Date();
+            const date = new Date(timestamp);
+            const diff = now - date;
+
+            // 1分钟内
+            if (diff < 60000) {
+                const seconds = Math.floor(diff / 1000);
+                return `${seconds}秒前`;
+            }
+
+            // 1小时内
+            if (diff < 3600000) {
+                const minutes = Math.floor(diff / 60000);
+                return `${minutes}分钟前`;
+            }
+
+            // 24小时内
+            if (diff < 86400000) {
+                const hours = Math.floor(diff / 3600000);
+                return `${hours}小时前`;
+            }
+
+            // 7天内
+            if (diff < 604800000) {
+                const days = Math.floor(diff / 86400000);
+                return `${days}天前`;
+            }
+
+            // 超过7天显示月日
+            return date.toLocaleString('zh-CN', {
+                month: '2-digit',
+                day: '2-digit'
+            });
+        }
+
+        // 显示历史记录
+        function displayHistory() {
+            const historyList = document.getElementById('historyList');
+            const noHistory = document.getElementById('noHistory');
+            const history = getHistory();
+
+            if (history.length === 0) {
+                historyList.style.display = 'none';
+                noHistory.style.display = 'block';
+                return;
+            }
+
+            historyList.style.display = 'grid';
+            noHistory.style.display = 'none';
+
+            // 按时间戳降序排序
+            const sortedHistory = history.sort((a, b) => b.timestamp - a.timestamp);
+
+            historyList.innerHTML = sortedHistory.map(item => {
+                const domain = item.url.split('/')[0];
+                const clearbitLogoUrl = `https://logo.clearbit.com/${domain}`;
+                const firstChar = item.title.replace(/[^\w\s]/g, '').charAt(0);
+                return `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <a href="https://${item.url}" class="history-title" target="_blank">${item.title}</a>
+                            <div class="delete-item" onclick="deleteHistoryItem('${item.url}')" title="删除记录">×</div>
+                        </div>
+                        <div class="history-footer">
+                            <div class="history-url">
+                                <div class="history-icon">
+                                    <img src="${clearbitLogoUrl}" alt="${domain}" class="lazy" 
+                                         onerror="this.onerror=null; this.parentElement.innerHTML='${firstChar}'">
+                                </div>
+                                <span>${item.url}</span>
+                            </div>
+                            <div class="history-time">${formatTime(item.timestamp)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // 图标懒加载处理
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '50px 0px',
+                threshold: 0.01
+            });
+
+            // 为每个图标添加观察者
+            document.querySelectorAll('.history-icon img.lazy').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        // 防抖函数
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // 搜索历史记录
+        function searchHistory(query) {
+            const history = getHistory();
+            if (!query) {
+                displayHistory();
+                return;
+            }
+
+            const filteredHistory = history.filter(item =>
+                item.title.toLowerCase().includes(query.toLowerCase()) ||
+                item.url.toLowerCase().includes(query.toLowerCase())
+            );
+
+            const historyList = document.getElementById('historyList');
+            const noHistory = document.getElementById('noHistory');
+
+            if (filteredHistory.length === 0) {
+                historyList.style.display = 'none';
+                noHistory.style.display = 'block';
+                return;
+            }
+
+            historyList.style.display = 'grid';
+            noHistory.style.display = 'none';
+
+            // 按时间戳降序排序
+            const sortedHistory = filteredHistory.sort((a, b) => b.timestamp - a.timestamp);
+
+            historyList.innerHTML = sortedHistory.map(item => {
+                const domain = item.url.split('/')[0];
+                const clearbitLogoUrl = `https://logo.clearbit.com/${domain}`;
+                const firstChar = item.title.replace(/[^\w\s]/g, '').charAt(0);
+                return `
+                    <div class="history-item">
+                        <div class="history-header">
+                            <a href="https://${item.url}" class="history-title" target="_blank">${item.title}</a>
+                            <div class="delete-item" onclick="deleteHistoryItem('${item.url}')" title="删除记录">×</div>
+                        </div>
+                        <div class="history-footer">
+                            <div class="history-url">
+                                <div class="history-icon">
+                                    <img src="${clearbitLogoUrl}" alt="${domain}" class="lazy" 
+                                         onerror="this.onerror=null; this.parentElement.innerHTML='${firstChar}'">
+                                </div>
+                                <span>${item.url}</span>
+                            </div>
+                            <div class="history-time">${formatTime(item.timestamp)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            // 图标懒加载处理
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            }, {
+                rootMargin: '50px 0px',
+                threshold: 0.01
+            });
+
+            document.querySelectorAll('.history-icon img.lazy').forEach(img => {
+                imageObserver.observe(img);
+            });
+        }
+
+        // 页面加载时显示历史记录
+        window.addEventListener('load', () => {
+            displayHistory();
+            // 添加搜索框事件监听
+            const searchInput = document.getElementById('searchInput');
+            const debouncedSearch = debounce((query) => searchHistory(query), 300);
+            searchInput.addEventListener('input', (e) => debouncedSearch(e.target.value));
+        });
+
+        // 监听标签页可见性变化
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') {
+                displayHistory();
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>页面未找到 -
+        <%= config.title %>
+    </title>
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" href="<%= config.icon %>">
+    <style>
+         :root {
+            --theme-color: <%=config.themeColor %>;
+            --text-color: #333;
+            --secondary-text: #6c757d;
+        }
+        
+        .container {
+            text-align: center;
+            padding: 2rem;
+            max-width: 600px;
+            margin: 100px auto;
+        }
+        
+        .error-code {
+            font-size: 120px;
+            font-weight: bold;
+            color: var(--theme-color);
+            line-height: 1;
+            margin: 0;
+            opacity: 0.2;
+        }
+        
+        .error-title {
+            font-size: 24px;
+            margin: 1rem 0;
+            color: var(--text-color);
+        }
+        
+        .error-message {
+            color: var(--secondary-text);
+            margin-bottom: 2rem;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        
+        .back-home {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background-color: var(--theme-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .back-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .back-home svg {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .logo {
+            width: 120px;
+            height: auto;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                margin: 60px auto;
+                max-width: 90%;
+            }
+            .error-code {
+                font-size: 60px;
+                margin-bottom: 0.5rem;
+            }
+            .error-title {
+                font-size: 1.2em;
+                margin: 0.5rem 0;
+            }
+            .error-message {
+                font-size: 0.9em;
+                margin-bottom: 1.5rem;
+                line-height: 1.5;
+            }
+            .logo {
+                width: 60px;
+                margin-bottom: 1.5rem;
+            }
+            .back-home {
+                padding: 8px 16px;
+                font-size: 0.9em;
+            }
+            .back-home svg {
+                width: 16px;
+                height: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                margin: 40px auto;
+                padding: 0.8rem;
+            }
+            .error-code {
+                font-size: 50px;
+            }
+            .error-title {
+                font-size: 1.1em;
+            }
+            .error-message {
+                font-size: 0.85em;
+                margin-bottom: 1.2rem;
+            }
+            .back-home {
+                padding: 6px 12px;
+                font-size: 0.85em;
+            }
+        }
+        /* 动画效果 */
+        
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="error-code">404</h1>
+        <h2 class="error-title">抱歉，页面未找到</h2>
+        <p class="error-message">
+            页面可能已被移除、名称已更改或暂时不可用!
+        </p>
+        <a href="/" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg> 返回首页
+        </a>
+    </div>
+</body>
+
+</html>

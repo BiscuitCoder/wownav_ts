@@ -1,0 +1,119 @@
+<!-- 页脚 -->
+<footer class="footer">
+    <div class="footer-container">
+        <div class="footer-section" style="display: block;">
+            <!-- <h3>关于 Wownav</h3> -->
+            <img src="/logo2.png" alt="Wownav Logo" style="height: 50px;width: auto;display: block;margin-bottom: 20px;">
+            <p>Wownav 是一个简单易用的导航站点生成工具，帮助你快速创建和管理个性化的导航页面。</p>
+        </div>
+        <div class="footer-section">
+            <h3>快速链接</h3>
+            <ul class="footer-links">
+                <li><a href="/manage/generate">创建导航</a></li>
+                <li><a href="/manage/sitemodify">导航管理</a></li>
+                <li><a href="/docs">使用文档</a></li>
+                <li><a href="/history">浏览记录</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h3>联系我们</h3>
+            <ul class="footer-links">
+                <li><a href="https://github.com/BiscuitCoder/wownav_v2" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy;
+            <%= new Date().getFullYear() %> Wownav. All rights reserved.</p>
+    </div>
+</footer>
+
+<style>
+    .footer {
+        background: var(--card-bg);
+        border-top: 1px solid var(--border-color);
+        padding: 40px 20px;
+        margin-top: auto;
+    }
+    
+    .footer-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+    }
+    
+    .footer-section {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .footer-section h3 {
+        font-size: 1.2em;
+        color: var(--text-color);
+        margin-bottom: 8px;
+    }
+    
+    .footer-section p {
+        color: var(--secondary-text);
+        font-size: 0.9em;
+        line-height: 1.6;
+    }
+    
+    .footer-links {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .footer-links a {
+        color: var(--secondary-text);
+        text-decoration: none;
+        font-size: 0.9em;
+        transition: color 0.3s ease;
+    }
+    
+    .footer-links a:hover {
+        color: var(--theme-color);
+    }
+    
+    .footer-bottom {
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+        text-align: center;
+        color: var(--tertiary-text);
+        font-size: 0.85em;
+    }
+    
+    @media (max-width: 768px) {
+        .footer {
+            padding: 30px 20px;
+        }
+        .footer-container {
+            gap: 30px;
+        }
+        .footer-section {
+            text-align: left;
+        }
+        .footer-links {
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: flex-start;
+        }
+        .footer-section h3 {
+            font-size: 1.1em;
+            margin-bottom: 12px;
+        }
+        .footer-section p {
+            font-size: 0.85em;
+        }
+        .footer-links a {
+            font-size: 0.85em;
+        }
+    }
+</style>

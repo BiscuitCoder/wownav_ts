@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>站点配置修改</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <style>
+         :root {
+            --theme-color: #102fb9;
+            --theme-rgb: 16, 47, 185;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --hover-bg: #f5f7f9;
+            --text-color: #333;
+            --secondary-text: #6c757d;
+            --tertiary-text: #9ca3af;
+            --border-color: #eaecef;
+        }
+        
+        body {
+            background: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+            min-height: calc(100vh - 450px);
+        }
+        
+        .content-wrapper {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        
+        .back-btn {
+            background-color: var(--secondary-text);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background-color: var(--text-color);
+            transform: translateY(-1px);
+        }
+        
+        .step {
+            display: none;
+            margin-bottom: 30px;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        .form-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0;
+            font-weight: 500;
+            width: 100px;
+            flex-shrink: 0;
+            text-align: right;
+            color: var(--text-color);
+            font-size: 13px;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        textarea {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            min-width: 0;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus,
+        input[type="password"]:focus,
+        textarea:focus {
+            border-color: var(--theme-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(var(--theme-rgb), 0.1);
+        }
+        
+        textarea {
+            min-height: 60px;
+            resize: vertical;
+        }
+        
+        .form-section {
+            background: var(--bg-color);
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .form-section h3 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        button {
+            background-color: var(--theme-color);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: rgba(var(--theme-rgb), 0.9);
+            transform: translateY(-1px);
+        }
+        
+        .error {
+            color: #f44336;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        
+        .nav-category {
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+        }
+        
+        .nav-category:hover {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .category-inputs {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 1;
+            margin-right: 15px;
+        }
+        
+        .category-inputs .form-group:first-child {
+            width: 200px;
+        }
+        
+        .category-inputs .form-group:nth-child(2) {
+            width: 100px;
+        }
+        
+        .category-actions {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+        
+        .nav-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .nav-table.collapsed {
+            display: none;
+        }
+        
+        .category-toggle {
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 10px;
+            color: var(--secondary-text);
+            transition: transform 0.3s;
+        }
+        
+        .category-toggle::before {
+            content: '▼';
+            font-size: 12px;
+            transition: transform 0.3s;
+        }
+        
+        .category-toggle.collapsed::before {
+            transform: rotate(-90deg);
+        }
+        
+        .nav-table th {
+            background-color: var(--hover-bg);
+            padding: 12px;
+            text-align: left;
+            border-bottom: 2px solid var(--border-color);
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .nav-table td {
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .nav-table input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-table .sort-column input {
+            width: 50px !important;
+        }
+        
+        .nav-table input:focus {
+            border-color: var(--theme-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(var(--theme-rgb), 0.1);
+        }
+        
+        .nav-table tr:hover {
+            background-color: var(--hover-bg);
+        }
+        
+        .add-btn {
+            background-color: var(--theme-color);
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        
+        .add-btn:hover {
+            background-color: rgba(var(--theme-rgb), 0.9);
+        }
+        
+        .delete-btn {
+            background-color: #f44336;
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        
+        .delete-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        .nav-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+        
+        .site-info {
+            background-color: var(--bg-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .site-info h3 {
+            margin: 0;
+            font-size: 15px;
+            color: var(--secondary-text);
+        }
+        
+        .site-info span {
+            font-weight: 500;
+            color: var(--text-color);
+        }
+        
+        .captcha-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: var(--bg-color);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            display: none;
+        }
+        
+        .captcha-container.show {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .captcha-image {
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            height: 40px;
+            transition: transform 0.2s;
+        }
+        
+        .captcha-image:hover {
+            transform: scale(1.05);
+        }
+        
+        .captcha-input {
+            width: 100px !important;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+            text-transform: uppercase;
+            background: var(--card-bg);
+            text-align: left;
+            height: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .captcha-input:focus {
+            border-color: var(--theme-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(var(--theme-rgb), 0.1);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            position: relative;
+            background-color: var(--card-bg);
+            padding: 25px;
+            width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 0;
+            transform: translateY(0);
+        }
+        
+        .modal-title {
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 8px 12px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-input:focus {
+            border-color: var(--theme-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(var(--theme-rgb), 0.1);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        
+        .modal-cancel {
+            background-color: var(--secondary-text);
+        }
+        
+        .modal-cancel:hover {
+            background-color: var(--text-color);
+        }
+        
+        .color-picker-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step h2 {
+            font-size: 20px;
+            margin: 0 0 30px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 15px;
+                padding: 0;
+            }
+            .content-wrapper {
+                padding: 20px;
+            }
+            .form-group {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            label {
+                text-align: left;
+                width: auto;
+            }
+            .category-header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .category-inputs {
+                width: 100%;
+                margin-right: 0;
+            }
+            .category-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+            .nav-table {
+                display: block;
+                overflow-x: auto;
+            }
+            .modal-content {
+                width: 90%;
+                max-width: 300px;
+                margin: 0;
+            }
+            .step h2 {
+                font-size: 14px;
+                margin-bottom: 25px;
+            }
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .toggle-all-btn {
+            background-color: var(--secondary-text);
+            color: white;
+            padding: 6px 12px;
+            font-size: 13px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .toggle-all-btn:hover {
+            background-color: var(--text-color);
+            transform: translateY(-1px);
+        }
+        
+        .sort-input {
+            width: 80px !important;
+            text-align: center;
+            padding: 8px 4px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .sort-input:focus {
+            border-color: var(--theme-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(var(--theme-rgb), 0.1);
+        }
+        
+        .sort-input::-webkit-inner-spin-button,
+        .sort-input::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        .sort-input[type=number] {
+            -moz-appearance: textfield;
+        }
+        
+        .form-section .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-section .form-group:last-child {
+            margin-bottom: 0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="content-wrapper">
+
+            <!-- 步骤1：输入站点名称 -->
+            <div id="step1" class="step active">
+                <h2>输入你的站点名称</h2>
+                <div class="form-group">
+                    <input type="text" id="siteName" required placeholder="请输入站点名称"> </div>
+                <button onclick="verifySite()" style="margin-top: 20px;">验证站点</button>
+                <div id="step1Error" class="error"></div>
+            </div>
+
+            <!-- 步骤2：编辑配置 -->
+            <div id="step2" class="step">
+                <div class="site-info">
+                    <h3>当前站点：</h3><span id="currentSiteName"></span>
+                </div>
+                <div class="form-section">
+                    <div class="form-group">
+                        <label for="title">站点标题：</label>
+                        <input type="text" id="title" placeholder="请输入站点标题" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">描述：</label>
+                        <textarea id="description" placeholder="请输入站点描述" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="keywords">关键词：</label>
+                        <input type="text" id="keywords" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tag" class="required">分类标签：</label>
+                        <select id="tag" required style="flex: 1; padding: 8px 12px; border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; min-width: 0; font-size: 14px; transition: all 0.3s ease; background-color: white;">
+                            <option value="">请选择分类</option>
+                            <option value="技术">技术</option>
+                            <option value="教育">教育</option>
+                            <option value="娱乐">娱乐</option>
+                            <option value="新闻">新闻</option>
+                            <option value="购物">购物</option>
+                            <option value="工具">工具</option>
+                            <option value="社交">社交</option>
+                            <option value="生活">生活</option>
+                            <option value="金融">金融</option>
+                            <option value="医疗">医疗</option>
+                            <option value="体育">体育</option>
+                            <option value="旅游">旅游</option>
+                            <option value="美食">美食</option>
+                            <option value="艺术">艺术</option>
+                            <option value="其他">其他</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="icon">图标URL：</label>
+                        <input type="text" id="icon" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="themeColor">主题颜色：</label>
+                        <div class="color-picker-container">
+                            <input type="color" id="themeColor" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="about">关于：</label>
+                        <textarea id="about" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">联系方式：</label>
+                        <textarea id="contact" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="logo">Logo URL：</label>
+                        <input type="text" id="logo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">新密码：</label>
+                        <input type="password" id="newPassword" placeholder="留空则不修改">
+                    </div>
+                    <div class="form-group">
+                        <label for="passwordHint">密码提示：</label>
+                        <input type="text" id="passwordHint" placeholder="可选，用于帮助记忆密码">
+                    </div>
+                    <input type="hidden" id="password">
+                </div>
+
+                <div class="form-section">
+                    <div class="section-header">
+                        <h3>导航分类</h3>
+                        <button class="toggle-all-btn" onclick="toggleAllCategories()">全部展开/收起</button>
+                    </div>
+                    <div id="navCategories"></div>
+                    <button class="add-btn" onclick="addCategory()">添加分类</button>
+                </div>
+
+                <div id="captchaContainer" class="captcha-container">
+                    <!-- <span class="captcha-label">验证码：</span> -->
+                    <img id="captchaImage" class="captcha-image" alt="验证码">
+                    <input type="text" id="captchaInput" class="captcha-input" maxlength="4" placeholder="请输入">
+                </div>
+
+                <div class="nav-actions">
+                    <button onclick="saveConfig()">保存配置</button>
+                    <button class="delete-btn" onclick="deleteSite()">删除站点</button>
+                </div>
+                <div id="step2Error" class="error"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加密码输入模态框 -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title">请输入密码</h3>
+            <input type="password" id="modalPassword" class="modal-input" placeholder="请输入密码">
+            <div class="modal-buttons">
+                <button class="modal-cancel" onclick="closePasswordModal()">取消</button>
+                <button onclick="confirmPassword()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 显示提示信息
+        function showToast(message, type = 'info') {
+            const backgroundColor = {
+                success: '#4CAF50',
+                error: '#f44336',
+                info: '#2196F3'
+            }[type];
+
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: backgroundColor,
+                stopOnFocus: true,
+                offset: {
+                    y: 20
+                },
+                style: {
+                    borderRadius: '8px',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)'
+                }
+            }).showToast();
+        }
+
+        // 移动端检测和重定向
+        function checkMobileAndRedirect() {
+            if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                const currentUrl = window.location.href;
+                const redirectUrl = encodeURIComponent(currentUrl);
+                window.location.replace(`/mobiletip?redirect=${redirectUrl}&title=站点修改`);
+            }
+        }
+
+        // 页面加载时检查
+        window.onload = function() {
+            checkMobileAndRedirect();
+            const siteName = getUrlParam('name');
+            if (siteName) {
+                document.getElementById('siteName').value = siteName;
+                verifySite();
+            }
+        };
+
+        let currentConfig = null;
+        let currentCaptchaId = '';
+        const API_BASE = '/api/upload';
+
+        // 验证密码规则
+        function validatePassword(password) {
+            if (!password) return false;
+            if (password.length < 6) return false;
+            if (!/[A-Z]/.test(password)) return false; // 必须包含大写字母
+            if (!/[a-z]/.test(password)) return false; // 必须包含小写字母
+            if (!/[0-9]/.test(password)) return false; // 必须包含数字
+            return true;
+        }
+
+        // 获取 URL 参数
+        function getUrlParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
+
+        // 设置 URL 参数
+        function setUrlParam(name, value) {
+            const url = new URL(window.location.href);
+            url.searchParams.set(name, value);
+            window.history.pushState({}, '', url);
+        }
+
+        // 获取验证码
+        async function getCaptcha() {
+            try {
+                const response = await fetch(`${API_BASE}/captcha/generate`);
+                const data = await response.json();
+                currentCaptchaId = data.id;
+                document.getElementById('captchaImage').src = data.image;
+                document.getElementById('captchaContainer').classList.add('show');
+            } catch (error) {
+                console.error('获取验证码失败:', error);
+                document.getElementById('step2Error').textContent = '获取验证码失败，请刷新页面重试';
+            }
+        }
+
+        // 点击验证码图片刷新
+        document.getElementById('captchaImage').addEventListener('click', getCaptcha);
+
+        // 验证验证码
+        async function verifyCaptcha() {
+            const captchaCode = document.getElementById('captchaInput').value.trim();
+            if (!captchaCode) {
+                showToast('请输入验证码', 'error');
+                return false;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/captcha/verify`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id: currentCaptchaId,
+                        code: captchaCode
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    showToast(data.error, 'error');
+                    await getCaptcha();
+                    document.getElementById('captchaInput').value = '';
+                    return false;
+                }
+
+                return true;
+            } catch (error) {
+                showToast('验证码验证失败，请重试', 'error');
+                return false;
+            }
+        }
+
+        // 验证站点
+        async function verifySite() {
+            const siteName = document.getElementById('siteName').value;
+            if (!siteName) {
+                showToast('请输入站点名称', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/verify`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: siteName
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    setUrlParam('name', siteName);
+                    currentConfig = data;
+                    currentConfig.name = siteName;
+                    document.getElementById('currentSiteName').textContent = siteName;
+                    document.getElementById('step1').classList.remove('active');
+                    document.getElementById('step2').classList.add('active');
+                    loadConfigToForm();
+                    await getCaptcha();
+                } else {
+                    showToast(data.error, 'error');
+                }
+            } catch (error) {
+                showToast('验证失败，请重试', 'error');
+            }
+        }
+
+        // 加载配置到表单
+        function loadConfigToForm() {
+            document.getElementById('title').value = currentConfig.title;
+            document.getElementById('description').value = currentConfig.description;
+            document.getElementById('keywords').value = currentConfig.keywords;
+            document.getElementById('tag').value = currentConfig.tag || '';
+            document.getElementById('icon').value = currentConfig.icon;
+            document.getElementById('themeColor').value = currentConfig.themeColor;
+            document.getElementById('about').value = currentConfig.about;
+            document.getElementById('contact').value = currentConfig.contact;
+            document.getElementById('logo').value = currentConfig.logo;
+            document.getElementById('newPassword').value = '';
+            document.getElementById('passwordHint').value = currentConfig.passwordHint || '';
+
+            const navCategories = document.getElementById('navCategories');
+            navCategories.innerHTML = '';
+            currentConfig.navs.forEach((category, index) => {
+                addCategoryToForm(category, index);
+            });
+        }
+
+        // 监听主题色变化
+        document.getElementById('themeColor').addEventListener('input', function(e) {
+            const colorPreview = this.parentElement.querySelector('.color-preview');
+            colorPreview.style.backgroundColor = e.target.value;
+        });
+
+        // 添加导航项到表单
+        function addCategoryToForm(category = {
+            category: '',
+            navs: []
+        }, index = -1) {
+            const navCategories = document.getElementById('navCategories');
+            const categoryDiv = document.createElement('div');
+            categoryDiv.className = 'nav-category';
+            categoryDiv.innerHTML = `
+                <div class="category-header">
+                    <div class="category-inputs">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <input type="text" class="category-name" value="${category.category}" placeholder="分类名称" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" class="category-sort sort-input" value="${category.sort || 0}" placeholder="排序">
+                        </div>
+                    </div>
+                    <div class="category-actions">
+                        <div class="category-toggle"></div>
+                        <button class="add-btn" onclick="addNavItem(this)">添加导航项</button>
+                        <button class="delete-btn" onclick="deleteCategory(this)">删除分类</button>
+                    </div>
+                </div>
+                <table class="nav-table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>URL</th>
+                            <th class="sort-column">排序</th>
+                            <th class="action-column">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${category.navs.map((nav, navIndex) => `
+                            <tr class="nav-item">
+                                <td>
+                                    <input type="text" class="nav-name" value="${nav.name}" placeholder="导航名称" required>
+                                </td>
+                                <td>
+                                    <input type="text" class="nav-url" value="${nav.url}" placeholder="导航链接" required>
+                                </td>
+                                <td class="sort-column">
+                                    <input type="number" class="nav-sort sort-input" value="${nav.sort || 0}" placeholder="排序值">
+                                </td>
+                                <td class="action-column">
+                                    <button class="delete-btn" onclick="deleteNavItem(this)">删除</button>
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            if (index === -1) {
+                navCategories.appendChild(categoryDiv);
+            } else {
+                navCategories.insertBefore(categoryDiv, navCategories.children[index]);
+            }
+
+            // 添加点击事件
+            const categoryToggle = categoryDiv.querySelector('.category-toggle');
+            const navTable = categoryDiv.querySelector('.nav-table');
+
+            categoryToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                navTable.classList.toggle('collapsed');
+                this.classList.toggle('collapsed');
+            });
+        }
+
+        // 添加分类
+        function addCategory() {
+            addCategoryToForm();
+        }
+
+        // 删除导航项
+        function deleteNavItem(button) {
+            button.closest('tr').remove();
+        }
+
+        // 删除分类
+        function deleteCategory(button) {
+            button.closest('.nav-category').remove();
+        }
+
+        // 展开/收起所有分类
+        function toggleAllCategories() {
+            const categories = document.querySelectorAll('.nav-category');
+            const toggles = document.querySelectorAll('.category-toggle');
+            const navTables = document.querySelectorAll('.nav-table');
+            
+            // 检查第一个分类的状态来决定是展开还是收起
+            const isFirstCollapsed = navTables[0]?.classList.contains('collapsed');
+            
+            categories.forEach((category, index) => {
+                const navTable = category.querySelector('.nav-table');
+                const toggle = category.querySelector('.category-toggle');
+                
+                if (isFirstCollapsed) {
+                    // 展开所有
+                    navTable.classList.remove('collapsed');
+                    toggle.classList.remove('collapsed');
+                } else {
+                    // 收起所有
+                    navTable.classList.add('collapsed');
+                    toggle.classList.add('collapsed');
+                }
+            });
+        }
+
+        // 从表单收集配置
+        function collectConfigFromForm() {
+            const config = {
+                name: currentConfig.name,
+                title: document.getElementById('title').value,
+                description: document.getElementById('description').value,
+                keywords: document.getElementById('keywords').value,
+                tag: document.getElementById('tag').value,
+                icon: document.getElementById('icon').value,
+                themeColor: document.getElementById('themeColor').value,
+                about: document.getElementById('about').value,
+                contact: document.getElementById('contact').value,
+                logo: document.getElementById('logo').value,
+                password: document.getElementById('password').value,
+                newPassword: document.getElementById('newPassword').value.trim(),
+                passwordHint: document.getElementById('passwordHint').value.trim(),
+                navs: []
+            };
+
+            const categories = document.querySelectorAll('.nav-category');
+            const navs = [];
+            categories.forEach(category => {
+                const categoryName = category.querySelector('.category-name').value.trim();
+                const categorySort = parseInt(category.querySelector('.category-sort').value || '0');
+                const navItems = [];
+                category.querySelectorAll('.nav-item').forEach(navItem => {
+                    navItems.push({
+                        name: navItem.querySelector('.nav-name').value.trim(),
+                        url: navItem.querySelector('.nav-url').value.trim(),
+                        sort: parseInt(navItem.querySelector('.nav-sort').value || '0')
+                    });
+                });
+                navs.push({
+                    category: categoryName,
+                    sort: categorySort,
+                    navs: navItems.sort((a, b) => b.sort - a.sort)
+                });
+            });
+            config.navs = navs.sort((a, b) => b.sort - a.sort);
+
+            return config;
+        }
+
+        // 添加密码模态框相关函数
+        let passwordResolve = null;
+        let modalAction = '';
+
+        function showPasswordModal(action) {
+            return new Promise((resolve) => {
+                modalAction = action;
+                passwordResolve = resolve;
+                document.getElementById('passwordModal').classList.add('show');
+                document.getElementById('modalPassword').value = '';
+                document.getElementById('modalPassword').focus();
+            });
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.remove('show');
+            if (passwordResolve) {
+                passwordResolve(null);
+                passwordResolve = null;
+            }
+        }
+
+        function confirmPassword() {
+            const password = document.getElementById('modalPassword').value;
+            document.getElementById('passwordModal').classList.remove('show');
+            if (passwordResolve) {
+                passwordResolve(password);
+                passwordResolve = null;
+            }
+        }
+
+        // 修改保存配置函数中的密码输入部分
+        async function saveConfig() {
+            // 验证验证码
+            if (!await verifyCaptcha()) {
+                return;
+            }
+
+            try {
+                // 使用自定义密码输入框
+                const password = await showPasswordModal('save');
+
+                if (!password) {
+                    showToast('密码不能为空', 'error');
+                    return;
+                }
+
+                // 验证密码规则
+                if (!validatePassword(password)) {
+                    showToast('密码必须至少6位，且包含大小写字母和数字', 'error');
+                    return;
+                }
+
+                // 设置隐藏的密码字段
+                document.getElementById('password').value = password;
+
+                // 收集配置（包含密码）
+                const config = collectConfigFromForm();
+
+                // 如果设置了新密码，验证新密码规则
+                if (config.newPassword && !validatePassword(config.newPassword)) {
+                    showToast('新密码必须至少6位，且包含大小写字母和数字', 'error');
+                    return;
+                }
+
+                const response = await fetch(`${API_BASE}/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: config.name,
+                        password: config.password,
+                        config: config
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('配置保存成功！', 'success');
+                } else {
+                    showToast(data.error, 'error');
+                }
+            } catch (error) {
+                console.error(error);
+                showToast('保存失败，请重试', 'error');
+            }
+        }
+
+        // 修改删除站点函数中的密码输入部分
+        async function deleteSite() {
+            // 验证验证码
+            if (!await verifyCaptcha()) {
+                return;
+            }
+
+            if (!confirm('这是一个风险操作，删除后站点数据将无法恢复。是否继续？')) {
+                return;
+            }
+
+            const password = await showPasswordModal('delete');
+
+            if (!password) {
+                showToast('密码不能为空', 'error');
+                return;
+            }
+
+            // 验证密码规则
+            if (!validatePassword(password)) {
+                showToast('密码必须至少6位，且包含大小写字母和数字', 'error');
+                return;
+            }
+
+            // 设置隐藏的密码字段
+            document.getElementById('password').value = password;
+
+            try {
+                const response = await fetch(`${API_BASE}/delete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: currentConfig.name,
+                        password: password
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    showToast('站点删除成功！', 'success');
+                    resetForm();
+                } else {
+                    showToast(data.error, 'error');
+                }
+            } catch (error) {
+                showToast('删除失败，请重试', 'error');
+            }
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('step1').classList.add('active');
+            document.getElementById('step2').classList.remove('active');
+            document.getElementById('siteName').value = '';
+            document.getElementById('step1Error').textContent = '';
+            document.getElementById('step2Error').textContent = '';
+            document.getElementById('captchaContainer').classList.remove('show');
+            document.getElementById('captchaInput').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('newPassword').value = '';
+            document.getElementById('passwordHint').value = '';
+            currentConfig = null;
+            currentCaptchaId = '';
+            setUrlParam('name', '');
+        }
+    </script>
+</body>
+
+</html>

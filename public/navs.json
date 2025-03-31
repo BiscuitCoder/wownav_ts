@@ -1,0 +1,35 @@
+[{
+        "category": "分类名称222",
+        "sort": 3,
+        "navs": [{
+            "name": "导航站名称1",
+            "url": "https://www.wownav.com",
+            "sort": 3
+        }, {
+            "name": "导航站名称2",
+            "url": "https://www.wownav.com",
+            "sort": 2
+        }, {
+            "name": "导航站名称3",
+            "url": "https://www.wownav.com",
+            "sort": 1
+        }]
+    },
+    {
+        "category": "分类名称",
+        "sort": 1,
+        "navs": [{
+            "name": "导航站名称1",
+            "url": "https://www.wownav.com",
+            "sort": 3
+        }, {
+            "name": "导航站名称2",
+            "url": "https://www.wownav.com",
+            "sort": 2
+        }, {
+            "name": "导航站名称3",
+            "url": "https://www.wownav.com",
+            "sort": 1
+        }]
+    }
+]

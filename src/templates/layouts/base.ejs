@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= title %> - Wownav | 让收藏创造价值</title>
+
+    <!-- SEO Meta 标签 -->
+    <meta name="description" content="<%= config.description || 'Wownav - 快速创建你的导航站，让收藏创造价值' %>">
+    <meta name="keywords" content="<%= config.keywords || '导航站,书签管理,SEO优化,静态站点' %>">
+    <meta name="author" content="Wownav">
+    <meta name="robots" content="index, follow">
+    <meta name="googlebot" content="index, follow">
+    <meta name="baiduspider" content="index, follow">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="<%= config.url || 'https://wownav.com' %>">
+    <meta property="og:title" content="<%= title %> - Wownav">
+    <meta property="og:description" content="<%= config.description || 'Wownav - 快速创建你的导航站，让收藏创造价值' %>">
+    <meta property="og:image" content="<%= config.logo || '/logo2_w.png' %>">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="<%= config.url || 'https://wownav.com' %>">
+    <meta property="twitter:title" content="<%= title %> - Wownav">
+    <meta property="twitter:description" content="<%= config.description || 'Wownav - 快速创建你的导航站，让收藏创造价值' %>">
+    <meta property="twitter:image" content="<%= config.logo || '/logo2_w.png' %>">
+
+    <!-- 结构化数据 -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Wownav",
+            "url": "<%= config.url || 'https://wownav.com' %>",
+            "description": "<%= config.description || 'Wownav - 快速创建你的导航站，让收藏创造价值' %>",
+            "potentialAction": {
+                "@type": "SearchAction",
+                "target": "<%= config.url || 'https://wownav.com' %>/search?q={search_term_string}",
+                "query-input": "required name=search_term_string"
+            }
+        }
+    </script>
+
+    <!-- 网站图标 -->
+    <link rel="icon" href="<%= config.icon %>">
+    <link rel="apple-touch-icon" href="<%= config.icon %>">
+    <link rel="canonical" href="<%= config.url || 'https://wownav.com' %>">
+
+    <!-- 站点地图 -->
+    <link rel="sitemap" type="application/xml" href="/api/upload/sitemap">
+
+    <!-- 预加载关键资源 -->
+    <link rel="preload" href="/logo2_w.png" as="image">
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+         :root {
+            --theme-color: #102fb9;
+            --theme-rgb: 16, 47, 185;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --hover-bg: #f5f7f9;
+            --text-color: #333;
+            --secondary-text: #6c757d;
+            --tertiary-text: #9ca3af;
+            --border-color: #eaecef;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            min-height: 100vh;
+        }
+    </style>
+    <%- style %>
+</head>
+
+<body>
+    <%- include('./header') %>
+
+        <%- body %>
+
+            <%- include('./footer') %>
+
+                <%- script %>
+</body>
+
+</html>
