@@ -45,7 +45,7 @@ echo "构建并启动容器..."
 docker build -t wownav . && \
 docker run -d \
     -p $PORT:3000 \
-    -v "$(pwd)/$PUBLIC_DIR:/www/wownav" \
+    -v "$(pwd)/$PUBLIC_DIR:/www/wwwroot/wownav_public" \
     -e PORT=3000 \
     -e NODE_ENV=production \
     -e HOST=$HOST \
