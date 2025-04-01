@@ -548,6 +548,12 @@
         .form-section .form-group:last-child {
             margin-bottom: 0;
         }
+        
+        .required::before {
+            content: "*";
+            color: #f44336;
+            margin-right: 4px;
+        }
     </style>
 </head>
 
@@ -572,16 +578,12 @@
                 </div>
                 <div class="form-section">
                     <div class="form-group">
-                        <label for="title">站点标题：</label>
+                        <label for="title" class="required">站点标题：</label>
                         <input type="text" id="title" placeholder="请输入站点标题" required>
                     </div>
                     <div class="form-group">
-                        <label for="description">描述：</label>
-                        <textarea id="description" placeholder="请输入站点描述" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="keywords">关键词：</label>
-                        <input type="text" id="keywords" required>
+                        <label for="keywords" class="required">关键词：</label>
+                        <input type="text" id="keywords" required placeholder="多个关键词用逗号分隔">
                     </div>
                     <div class="form-group">
                         <label for="tag" class="required">分类标签：</label>
@@ -605,34 +607,43 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="icon">图标URL：</label>
-                        <input type="text" id="icon" required>
+                        <label for="contact" class="required">联系方式：</label>
+                        <input type="text" id="contact" required placeholder="请输入邮箱地址">
                     </div>
+
                     <div class="form-group">
-                        <label for="themeColor">主题颜色：</label>
-                        <div class="color-picker-container">
-                            <input type="color" id="themeColor" required>
-                        </div>
+                        <label for="description" class="required">描述：</label>
+                        <textarea id="description" placeholder="请输入站点描述" required></textarea>
                     </div>
-                    <div class="form-group">
-                        <label for="about">关于：</label>
-                        <textarea id="about" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="contact">联系方式：</label>
-                        <textarea id="contact" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="logo">Logo URL：</label>
-                        <input type="text" id="logo" required>
-                    </div>
+
                     <div class="form-group">
                         <label for="newPassword">新密码：</label>
-                        <input type="password" id="newPassword" placeholder="留空则不修改">
+                        <div style="display: flex; gap: 10px; align-items: center; flex: 1;">
+                            <input type="password" id="newPassword" placeholder="留空则不修改" style="flex: 1;">
+                            <button type="button" onclick="toggleNewPassword()" style="padding: 6px 12px;background-color: #9ca3af; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">显示</button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="passwordHint">密码提示：</label>
                         <input type="text" id="passwordHint" placeholder="可选，用于帮助记忆密码">
+                    </div>
+                    <div class="form-group">
+                        <label for="icon">图标：</label>
+                        <input type="text" id="icon" placeholder="请输入网站图标URL">
+                    </div>
+                    <div class="form-group">
+                        <label for="logo">Logo：</label>
+                        <input type="text" id="logo" placeholder="请输入网站Logo URL">
+                    </div>
+                    <div class="form-group">
+                        <label for="themeColor">主题色：</label>
+                        <div class="color-picker-container">
+                            <input type="color" id="themeColor" value="#102fb9">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="about">关于：</label>
+                        <textarea id="about" placeholder="请输入关于本站的描述（选填）"></textarea>
                     </div>
                     <input type="hidden" id="password">
                 </div>
@@ -721,6 +732,20 @@
         let currentConfig = null;
         let currentCaptchaId = '';
         const API_BASE = '/api/upload';
+
+        // 添加新密码显示切换功能
+        function toggleNewPassword() {
+            const passwordInput = document.getElementById('newPassword');
+            const toggleButton = passwordInput.nextElementSibling;
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = '隐藏';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = '显示';
+            }
+        }
 
         // 验证密码规则
         function validatePassword(password) {
@@ -976,15 +1001,15 @@
         function collectConfigFromForm() {
             const config = {
                 name: currentConfig.name,
-                title: document.getElementById('title').value,
-                description: document.getElementById('description').value,
-                keywords: document.getElementById('keywords').value,
-                tag: document.getElementById('tag').value,
-                icon: document.getElementById('icon').value,
+                title: document.getElementById('title').value.trim(),
+                description: document.getElementById('description').value.trim(),
+                keywords: document.getElementById('keywords').value.trim(),
+                tag: document.getElementById('tag').value.trim(),
+                icon: document.getElementById('icon').value.trim() || "",
+                logo: document.getElementById('logo').value.trim() || "",
                 themeColor: document.getElementById('themeColor').value,
-                about: document.getElementById('about').value,
-                contact: document.getElementById('contact').value,
-                logo: document.getElementById('logo').value,
+                about: document.getElementById('about').value.trim(),
+                contact: document.getElementById('contact').value.trim(),
                 password: document.getElementById('password').value,
                 newPassword: document.getElementById('newPassword').value.trim(),
                 passwordHint: document.getElementById('passwordHint').value.trim(),

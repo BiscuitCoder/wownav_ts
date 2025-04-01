@@ -661,33 +661,36 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="icon" class="required">图标：</label>
-                <input type="text" id="icon" required placeholder="请输入网站图标URL">
-            </div>
-            <div class="form-group">
-                <label for="logo" class="required">Logo：</label>
-                <input type="text" id="logo" required placeholder="请输入网站Logo URL">
-            </div>
-            <div class="form-group">
-                <label for="themeColor" class="required">主题色：</label>
-                <input type="color" id="themeColor" value="#102fb9">
-            </div>
-            <div class="form-group">
-                <label for="about">关于：</label>
-                <textarea id="about" placeholder="请输入关于本站的描述（选填）"></textarea>
-            </div>
-            <div class="form-group">
                 <label for="contact" class="required">联系方式：</label>
-                <textarea id="contact" required placeholder="请输入联系方式"></textarea>
+                <input type="text" id="contact" required placeholder="请输入邮箱地址">
             </div>
             <div class="form-group">
                 <label for="password" class="required">密码：</label>
-                <input type="password" id="password" required placeholder="至少6位，包含大小写字母和数字">
+                <div style="display: flex; gap: 10px; align-items: center; flex: 1;">
+                    <input type="password" id="password" required placeholder="至少6位，包含大小写字母和数字" style="flex: 1;">
+                    <button type="button" onclick="togglePassword()" style="padding: 6px 12px;background-color: #9ca3af; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 12px;">显示</button>
+                </div>
                 <div style="font-size: 12px; color: #f44336; margin-top: 5px;">请妥善保管密码，系统无法为您找回</div>
             </div>
             <div class="form-group">
                 <label for="passwordHint">密码提示：</label>
                 <input type="text" id="passwordHint" placeholder="可选，用于帮助记忆密码">
+            </div>
+            <div class="form-group">
+                <label for="icon">图标：</label>
+                <input type="text" id="icon" placeholder="请输入网站图标URL">
+            </div>
+            <div class="form-group">
+                <label for="logo">Logo：</label>
+                <input type="text" id="logo" placeholder="请输入网站Logo URL">
+            </div>
+            <div class="form-group">
+                <label for="themeColor">主题色：</label>
+                <input type="color" id="themeColor" value="#102fb9">
+            </div>
+            <div class="form-group">
+                <label for="about">关于：</label>
+                <textarea id="about" placeholder="请输入关于本站的描述（选填）"></textarea>
             </div>
         </div>
 
@@ -1098,9 +1101,6 @@
                 'description': '描述',
                 'keywords': '关键词',
                 'tag': '分类标签',
-                'icon': '图标',
-                'logo': 'Logo',
-                'themeColor': '主题色',
                 'contact': '联系方式',
                 'password': '密码'
             };
@@ -1181,8 +1181,8 @@
                 description: document.getElementById('description').value.trim(),
                 keywords: document.getElementById('keywords').value.trim(),
                 tag: document.getElementById('tag').value.trim(),
-                icon: document.getElementById('icon').value.trim(),
-                logo: document.getElementById('logo').value.trim(),
+                icon: document.getElementById('icon').value.trim() || "",
+                logo: document.getElementById('logo').value.trim() || "",
                 themeColor: document.getElementById('themeColor').value,
                 about: document.getElementById('about').value.trim(),
                 contact: document.getElementById('contact').value.trim(),
@@ -1310,6 +1310,20 @@
                     toggle.classList.add('collapsed');
                 }
             });
+        }
+
+        // 添加密码显示切换功能
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleButton = passwordInput.nextElementSibling;
+
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = '隐藏';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = '显示';
+            }
         }
     </script>
 </body>
