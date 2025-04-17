@@ -1,0 +1,316 @@
+<style>
+    .chat-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .chat-box {
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+    
+    .messages-container {
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .message {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .message.user {
+        align-items: flex-end;
+    }
+    
+    .message.assistant {
+        align-items: flex-start;
+    }
+    
+    .message-bubble {
+        max-width: 70%;
+        padding: 10px 15px;
+        border-radius: 15px;
+        word-wrap: break-word;
+    }
+    
+    .message.user .message-bubble {
+        background-color: #1a73e8;
+        color: white;
+    }
+    
+    .message.assistant .message-bubble {
+        background-color: #f1f3f4;
+        color: #202124;
+    }
+    
+    .input-container {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .message-input {
+        flex: 1;
+        padding: 10px 15px;
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+    
+    .message-input:focus {
+        outline: none;
+        border-color: #1a73e8;
+    }
+    
+    .send-button {
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: background-color 0.2s;
+    }
+    
+    .send-button:hover {
+        background-color: #1557b0;
+    }
+    /* 滚动条样式 */
+    
+    .messages-container::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .messages-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    
+    .messages-container::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 4px;
+    }
+    
+    .messages-container::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+    }
+    
+    .message-bubble.loading {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .loading-dots {
+        display: flex;
+        gap: 4px;
+    }
+    
+    .loading-dots span {
+        width: 4px;
+        height: 4px;
+        background-color: currentColor;
+        border-radius: 50%;
+        animation: loading 1.4s infinite ease-in-out;
+    }
+    
+    .loading-dots span:nth-child(1) {
+        animation-delay: 0s;
+    }
+    
+    .loading-dots span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .loading-dots span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes loading {
+        0%,
+        80%,
+        100% {
+            transform: scale(0);
+        }
+        40% {
+            transform: scale(1);
+        }
+    }
+    
+    .error-message {
+        color: #d32f2f;
+        background-color: #ffebee;
+        border: 1px solid #ffcdd2;
+    }
+</style>
+
+
+<div class="chat-container">
+    <div class="chat-box">
+        <div class="messages-container" id="chat-messages"></div>
+
+        <div class="input-container">
+            <input type="text" id="user-input" class="message-input" placeholder="输入消息...">
+            <button onclick="sendMessage()" class="send-button">发送</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentResponse = '';
+    let isLoading = false;
+
+    async function sendMessage() {
+        const input = document.getElementById('user-input');
+        const message = input.value.trim();
+        if (!message) return;
+
+        // 显示用户消息
+        appendMessage('user', message);
+        input.value = '';
+
+        // 清空当前响应并显示加载状态
+        currentResponse = '';
+        isLoading = true;
+        showLoadingMessage();
+
+        try {
+            const response = await fetch('/deepseek', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    message
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`请求失败 (${response.status})`);
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+
+            while (true) {
+                const {
+                    value,
+                    done
+                } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value);
+                const lines = chunk.split('\n');
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const data = line.slice(6);
+                        if (data === '[DONE]') {
+                            break;
+                        }
+
+                        try {
+                            const parsed = JSON.parse(data);
+                            if (parsed.error) {
+                                throw new Error(parsed.error);
+                            }
+                            if (parsed.content) {
+                                currentResponse += parsed.content;
+                                updateAssistantMessage();
+                            }
+                        } catch (e) {
+                            console.error('解析响应数据失败:', e);
+                            throw new Error('解析响应数据失败');
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('请求失败:', error);
+            showErrorMessage(error.message);
+        } finally {
+            isLoading = false;
+        }
+    }
+
+    function showLoadingMessage() {
+        const messagesDiv = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message assistant';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble loading';
+
+        const loadingDots = document.createElement('div');
+        loadingDots.className = 'loading-dots';
+        loadingDots.innerHTML = '<span></span><span></span><span></span>';
+
+        bubble.appendChild(loadingDots);
+        messageDiv.appendChild(bubble);
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function showErrorMessage(error) {
+        const messagesDiv = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message assistant';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble error-message';
+        bubble.textContent = `抱歉，发生了错误：${error}`;
+
+        messageDiv.appendChild(bubble);
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function appendMessage(role, content) {
+        const messagesDiv = document.getElementById('chat-messages');
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${role}`;
+
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble';
+        bubble.textContent = content;
+
+        messageDiv.appendChild(bubble);
+        messagesDiv.appendChild(messageDiv);
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    function updateAssistantMessage() {
+        const messagesDiv = document.getElementById('chat-messages');
+        const lastMessage = messagesDiv.lastElementChild;
+
+        if (lastMessage && lastMessage.classList.contains('assistant')) {
+            const bubble = lastMessage.querySelector('.message-bubble');
+            if (bubble.classList.contains('loading')) {
+                bubble.classList.remove('loading');
+                bubble.innerHTML = currentResponse;
+            } else {
+                bubble.textContent = currentResponse;
+            }
+        } else {
+            appendMessage('assistant', currentResponse);
+        }
+
+        messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    }
+
+    // 支持按回车发送消息
+    document.getElementById('user-input').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !isLoading) {
+            sendMessage();
+        }
+    });
+</script>

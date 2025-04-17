@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 import uploadRouter from './routes/upload';
 import path from 'path';
 import expressLayouts from 'express-ejs-layouts';
+import { beautifyHtml, deepseekChat } from './utils/deepseek';
 
 // 加载环境变量
 dotenv.config();
@@ -63,6 +64,11 @@ app.get('/docs', (req, res) => {
   res.render('docs',{title: '使用文档'});
 });
 
+// 聊天页面路由
+app.get('/chat', (req, res) => {
+  res.render('chat', {title: 'AI 聊天'});
+});
+
 // 移动端提示页面路由
 app.get('/mobiletip', (req, res) => {
   res.render('mobile_tip',{title: '提示'});
@@ -71,6 +77,79 @@ app.get('/mobiletip', (req, res) => {
 // 浏览记录路由
 app.get('/history', (req: express.Request, res: express.Response) => {
   res.render('history',{title: '浏览记录'});
+});
+
+  // deepseek api访问
+  app.post('/deepseek', async (req: express.Request, res: express.Response) => {
+      const { message } = req.body;
+      await deepseekChat(message, res);
+  });
+
+// 美化html
+app.post('/beautify', async (req: express.Request, res: express.Response) => {
+  /*
+  const config:SiteConfig = {
+    title: 'Wownav test',
+    description: 'Wownav 是一个开放免费的导航网站生成工具',
+    keywords: 'Wownav,导航,免费,开放',
+    icon: '/logo.svg',
+    themeColor: '#102fb9',
+    about: 'Wownav 是一个开放免费的导航网站生成工具',
+    contact: 'https://github.com/wownav',
+    logo: '',
+    author: 'Wownav',
+    navs: [{
+      category: "分类名称222",
+      sort: 3,
+      navs: [
+        {
+          name: "导航站名称1",
+          url: "https://www.wownav.com",
+          sort: 3
+        },
+        {
+          name: "导航站名称2",
+          url: "https://www.wownav.com",
+          sort: 2
+        },
+        {
+          name: "导航站名称3",
+          url: "https://www.wownav.com",
+          sort: 1
+        }
+      ]
+    },
+    {
+      category: "分类名称",
+      sort: 1,
+      navs: [
+        {
+          name: "导航站名称1",
+          url: "https://www.wownav.com",
+          sort: 3
+        },
+        {
+          name: "导航站名称2",
+          url: "https://www.wownav.com",
+          sort: 2
+        },
+        {
+          name: "导航站名称3",
+          url: "https://www.wownav.com",
+          sort: 1
+        }
+      ]
+    }],
+    authorUrl: 'https://github.com/wownav',
+    password: '123456'
+  };
+  */
+  const url = await beautifyHtml(req.body.siteConfig, req.body.prompt);
+  res.json({data:url});
+});
+
+app.get('/ping', (req: express.Request, res: express.Response) => {
+  res.json({message: 'pong'});
 });
 
 // 错误处理中间件

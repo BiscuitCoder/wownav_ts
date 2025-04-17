@@ -1,14 +1,17 @@
-export interface Nav {
+export interface NavItem {
 	name: string;
 	url: string;
+	sort?: number;
 }
 
-export interface Nav {
+export interface NavCategory {
 	category: string;
-	navs: Nav[];
+	sort: number;
+	navs: NavItem[];
 }
 
 export interface SiteConfig {
+	name?: string;
 	title: string;
 	description: string;
 	keywords: string;
@@ -20,5 +23,5 @@ export interface SiteConfig {
 	author: string;
 	authorUrl: string;
 	password: string;
-	navs: Nav[];
+	navs: NavCategory[];
 }
