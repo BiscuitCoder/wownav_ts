@@ -2,6 +2,9 @@
 
 基于 TypeScript 和 Express 的服务端项目，用于管理和生成导航站点。
 
+## 生成效果
+![cover](./cover.png)
+
 ## 功能特点
 
 - TypeScript 支持
