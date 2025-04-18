@@ -144,7 +144,7 @@ app.post('/beautify', async (req: express.Request, res: express.Response) => {
     password: '123456'
   };
   */
-  const url = await beautifyHtml(req.body.siteConfig, req.body.prompt);
+  const url = await beautifyHtml(req.body.siteConfig, req.body.prompt, req.body.needCreatePage);
   res.json({data:url});
 });
 

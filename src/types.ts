@@ -24,4 +24,5 @@ export interface SiteConfig {
 	authorUrl: string;
 	password: string;
 	navs: NavCategory[];
+	totalNavs?: number;
 }
