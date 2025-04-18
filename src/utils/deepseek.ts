@@ -6,6 +6,7 @@ import path from 'path';
 import ejs from "ejs";
 import { SiteConfig } from '@/types/site';
 import { generateStaticPage } from '../routes/upload/utils';
+import { generatePasswordHash, generateRandomPassword } from './password';
 
 // 验证环境变量
 if (!process.env.DEEPSEEK_API_KEY) {
@@ -62,7 +63,7 @@ export const beautifyHtml = async (
     config: SiteConfig, 
     prompt?: string,
     needCreatePage: boolean = true
-): Promise<string> => {
+): Promise<{result: string, password: string}> => {
 
     // 读取模板文件
     const template = fs.readFileSync(
@@ -185,8 +186,13 @@ export const beautifyHtml = async (
     // 渲染模板
     const htmlRes = await ejs.render(html, { config });
 
+    console.log('htmlRes', needCreatePage);
+
     if (!needCreatePage) {
-        return htmlRes;
+        return {
+            result: htmlRes,
+            password: ''
+        };
     }
 
     // 以当前config.name为文件名,创建一个文件夹，保存到public目录下，同时创建一个index.html，写入htmlres数据，使得可以通过当前服务可以访问到这个页面
@@ -199,10 +205,17 @@ export const beautifyHtml = async (
     // const filePath = path.join(dirPath, 'index.html');
     // fs.writeFileSync(filePath, htmlRes);
 
+    // 生成随机6位数密码,带字母和数字
+   
+
+    const randomPassword = generateRandomPassword();
+    const {hash } = generatePasswordHash(randomPassword);
+    config.password = hash;
+
     
     await generateStaticPage(config as SiteConfig, name);
     
     // 返回可访问的URL
     const url = `http://localhost:3008/${name}`;
-    return url;
+    return {result: url, password: randomPassword};
 }

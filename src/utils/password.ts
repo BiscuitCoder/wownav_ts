@@ -30,3 +30,26 @@ export const generatePasswordHash = (password: string): { salt: string; hash: st
     const hash = hashPassword(password, salt);
     return { salt, hash };
 }; 
+
+export const generateRandomPassword = () => {
+    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+    const numbers = '0123456789';
+    const allChars = uppercase + lowercase + numbers;
+    
+    let password = '';
+    // 确保至少包含一个大写字母
+    password += uppercase[Math.floor(Math.random() * uppercase.length)];
+    // 确保至少包含一个小写字母
+    password += lowercase[Math.floor(Math.random() * lowercase.length)];
+    // 确保至少包含一个数字
+    password += numbers[Math.floor(Math.random() * numbers.length)];
+    
+    // 填充剩余3个字符
+    for (let i = 0; i < 3; i++) {
+        password += allChars[Math.floor(Math.random() * allChars.length)];
+    }
+    
+    // 打乱密码字符顺序
+    return password.split('').sort(() => Math.random() - 0.5).join('');
+};
