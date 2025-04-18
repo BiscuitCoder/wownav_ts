@@ -31,7 +31,7 @@ export const getExistingConfig = (siteName: string): SiteConfig | null => {
 };
 
 // 生成静态页面
-export const generateStaticPage = async (config: SiteConfig, siteName: string) => {
+export const generateStaticPage = async (config: SiteConfig, siteName: string, callhtml?: string) => {
   try {
     // 创建站点目录
     const siteDir = path.join(__dirname, '../../../public', siteName);
@@ -51,13 +51,16 @@ export const generateStaticPage = async (config: SiteConfig, siteName: string) =
     );
 
     // 读取模板
-    const template = fs.readFileSync(
-      path.join(__dirname, '../../templates/site_temp.ejs'),
-      'utf-8'
-    );
-
-    // 渲染HTML
-    const html = await ejs.render(template, { config });
+    let html = '';
+    if (callhtml) {
+      html = callhtml;
+    } else {
+      const template = fs.readFileSync(
+        path.join(__dirname, '../../templates/site_temp.ejs'),
+        'utf-8'
+      );
+      html = await ejs.render(template, { config });
+    }
 
     // 保存HTML文件
     fs.writeFileSync(path.join(siteDir, 'index.html'), html);

@@ -36,7 +36,8 @@ export const deepseekChat = async function (message: string, res: Response) {
         
         const stream = await openai.chat.completions.create({
             messages: messages,
-            model: 'deepseek-r1-250120',
+            // model: 'deepseek-r1-250120',
+            model: 'doubao-1-5-thinking-pro-250415',
             stream: true,
         });
         
@@ -74,7 +75,7 @@ export const beautifyHtml = async (
     // 分割模板
     let [css, dom, js] = template.split('<!-- Dividing -->');
 
-    // prompt = '加载完成后，在搜索栏下面，插入一个banner图片链接为：https://github.com/lxdao-official/.github/raw/main/images/LXDAO.png ,图片加入一个css的心跳循环动画,图片宽度为100%自适应,点击这个图片alert("欢迎各位LX，让给我们共创良心社会🤝~")';
+    // prompt = "加载完成后，在搜索栏下面，插入一个banner图片链接为：https://github.com/lxdao-official/.github/raw/main/images/LXDAO.png ,图片加入一个css的心跳循环动画,图片宽度为100%自适应，图片加入上边距,点击这个图片alert("欢迎各位LX，让给我们共创良心社会🤝~")';
     
     // 如果有优化提示词
     if (prompt) {
