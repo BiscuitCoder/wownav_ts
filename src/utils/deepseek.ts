@@ -79,6 +79,9 @@ export const beautifyHtml = async (
     
     // 如果有优化提示词
     if (prompt) {
+        const model =  'deepseek-r1-250120';
+        console.log('模型===>', model);
+        console.log('prompt代码生成中===>', prompt);
         try {
             const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
                 { 
@@ -113,7 +116,7 @@ export const beautifyHtml = async (
             
             const response = await openai.chat.completions.create({
                 messages: messages,
-                model: 'deepseek-r1-250120',
+                model,
                 stream: false,
             });
             
@@ -214,7 +217,7 @@ export const beautifyHtml = async (
     config.password = hash;
 
     
-    await generateStaticPage(config as SiteConfig, name);
+    await generateStaticPage(config as SiteConfig, name, htmlRes);
     
     // 返回可访问的URL
     const url = `http://localhost:3008/${name}`;
